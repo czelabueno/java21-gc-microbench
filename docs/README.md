@@ -35,17 +35,14 @@ OpenJDK 64-Bit Server VM GraalVM CE 21+35.1 (build 21+35-jvmci-23.1-b15, mixed m
 ```
 .. y ha sido ejecutado en una MacBook Pro M2 Chip `MacBook-Pro 22.5.0 Darwin Kernel Version 22.5.0...RELEASE_ARM64_T8112 arm64` de CPU `8-Core`, Memoria fisica de `8GB`
 
-![java21-gc-bench](https://github.com/czelabueno/java21-gc-microbench/blob/cd068bd7c3488df724e2ee7b21882c67e3fd6028/images/j21-gc-microbenchmarks.jpg)
+![java21-gc-bench](blob:https://github.com/4683b652-9617-4eb2-8bee-95ed639ad2fc)
 
-<font size="2">
 
-- Latencia medida en microsegundos (μs) 1/1,000,000 de segundo
+- _Latencia medida en microsegundos (μs) 1/1,000,000 de segundo_
 
-- Throughput en miles de request por segundo (kprs)
+- _Throughput en miles de request por segundo (kprs)_
 
-- Memory Usage en Megabytes (MB)
-
-</font>
+- _Memory Usage en Megabytes (MB)_
 
 
 Este micro-benchmark ha puesto a prueba 4 implementaciones de GCs usando sus configuraciones por defecto (sin tunning) para seleccionar cuál es más eficiente para un microservicio, recordemos la [definicion de microservicio](https://www.vmware.com/es/topics/glossary/content/microservices.html) y veremos que una de sus principales caracteristicas es ofrecer una mayor disponibilidad y escalamiento.
@@ -53,7 +50,8 @@ Este micro-benchmark ha puesto a prueba 4 implementaciones de GCs usando sus con
 Existen GC de distintos tipos, estan los concurrentes, los basados en threads, los que buscan un mejor equilibrio entre throughput y latencia, etc. Bajo esa misma perspectiva evaluamos estos 4 (el generational ZGC fue incluida porque es la última implementación liberada en Java 21 y despertó mi curiosidad):
 - [`ParallelGC`](https://inside.java/2022/08/01/sip062/): Es el que te ofrece el mayor throughput posible utilizando multiples threads, pero esto tiene el costo de tiempos de pausa y uso de memoria. Es un GC multi-generacional (almacena objetos jovenes y viejos).
 
-    #### Ejecucion
+    Ejecución:
+
     ```shell
     $ java -verbose:gc -XX:+UseParallelGC -jar quarkus-aot-sample/target/quarkus-aot-sample.jar &
 
@@ -64,15 +62,15 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
     Corremos de forma consecutiva 3 repiticiones de la misma carga
     ```
     # Run 1
-    hey -z 20s -c 4 http://localhost:8080/community & ./print-stats.sh
+    $ hey -z 20s -c 4 http://localhost:8080/community & ./print-stats.sh
 
     # Run 2.. Run 3
     ...
     ```
-    Esta configuracion generaria 1MM de solicitudes en 20 segundos de forma distribuida con 4 workers por corrida.
+    Esta configuración generaría 1MM de solicitudes en 20 segundos de forma distribuida con 4 workers por corrida.
 
 
-    #### Resultado final
+    ### Resultado final:
     ```
     # GC Log
     [71.552s][info][gc] GC(571) Pause Young (Allocation Failure) 33M->10M(109M) 0.177ms
@@ -90,7 +88,7 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
 
 - [`G1GC`](https://inside.java/2022/06/20/sip056/): Ofrece un mayor balance entre un alto throughput y latencia y tiene tiempos de pausa de corta duracion ya que corre en paralelo con la aplicacion. Tambien utiliza multiples threads y ofrece mayor previsibilidad. Es el GC por default y es un GC multi-generacional.
 
-    #### Ejecucion
+    Ejecución
     ```shell
     $ java -verbose:gc -jar quarkus-aot-sample/target/quarkus-aot-sample.jar &
 
@@ -101,7 +99,7 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
     Corremos de forma consecutiva 3 repiticiones de la misma carga
     ```
     # Run 1
-    hey -z 20s -c 4 http://localhost:8080/community & ./print-stats.sh
+    $ hey -z 20s -c 4 http://localhost:8080/community & ./print-stats.sh
 
     # Run 2.. Run 3
     ...
@@ -109,7 +107,8 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
     Esta configuracion generaria 1MM de solicitudes en 20 segundos de forma distribuida con 4 workers por corrida.
 
 
-    #### Resultado final
+    ### Resultado final:
+
     ```
     # GC Log
     [69.358s][info][gc] GC(569) Pause Young (Normal) (G1 Evacuation Pause) 34M->10M(43M) 0.372ms
@@ -124,9 +123,10 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
     PID 5695: RSS 152.7M
 
     ```
-- [`ZGC`](https://inside.java/2022/05/30/sip053/): Disenada para ofrecer una baja latencia y llegar a altos numeros de escalamiento en el tamano del Heap (soporta hasta 16TBs). Sus tiempos de pausa son muy cortos (microsegundos) pero ofrece un menor throughput que las anteriores. Es un GC de una sola generacion (objetos viejos).
+- [`ZGC`](https://inside.java/2022/05/30/sip053/): Diseñada para ofrecer una baja latencia y llegar a altos numeros de escalamiento en el tamano del Heap (soporta hasta 16TBs). Sus tiempos de pausa son muy cortos (microsegundos) pero ofrece un menor throughput que las anteriores. Es un GC de una sola generacion (objetos viejos).
 
-    #### Ejecucion
+    Ejecución:
+
     ```shell
     $ java -verbose:gc -XX:+UseZGC -jar quarkus-aot-sample/target/quarkus-aot-sample.jar &
 
@@ -137,7 +137,7 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
     Corremos de forma consecutiva 3 repiticiones de la misma carga
     ```
     # Run 1
-    hey -z 20s -c 4 http://localhost:8080/community & ./print-stats.sh
+    $ hey -z 20s -c 4 http://localhost:8080/community & ./print-stats.sh
 
     # Run 2.. Run 3
     ...
@@ -145,7 +145,8 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
     Esta configuración generaría 1MM de solicitudes en 20 segundos de forma distribuida con 4 workers por corrida.
 
 
-    #### Resultado final
+    ### Resultado final:
+
     ```
     # GC Log
     [58.771s][info][gc] GC(32) Garbage Collection (Proactive) 358M(17%)->50M(2%)
@@ -163,7 +164,7 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
 
 - [`Generational ZGC` - introducido en Java 21](https://openjdk.org/jeps/439): Ofrece todas las ventajas del ZGC ya que esta basada en ella pero agrega la capacidad de ser  multi-generacional diviendo el espacio del Heap para soportar objetos jovenes y viejos resultado en un mayor throughput con menor consumo de memoria que el ZGC.
 
-    #### Ejecucion
+    Ejecución:
 
     _Nota que en la tercera linea del log la JVM desactiva automáticamente el compilador de GraalVM (JVMCI) ya que este aun no soporta Generational ZGC, pero podemos usar Java 21 de igual manera._
 
@@ -178,7 +179,7 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
     Corremos de forma consecutiva 3 repiticiones de la misma carga
     ```
     # Run 1
-    hey -z 20s -c 4 http://localhost:8080/community & ./print-stats.sh
+    $ hey -z 20s -c 4 http://localhost:8080/community & ./print-stats.sh
 
     # Run 2.. Run 3
     ...
@@ -186,7 +187,8 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
     Esta configuración generaría 1MM de solicitudes en 20 segundos de forma distribuida con 4 workers por corrida.
 
 
-    #### Resultado final
+    ### Resultado final:
+
     ```
     # GC Log
     [107.288s][info   ][gc      ] GC(11) Major Collection (Proactive) 732M(36%)->64M(3%) 0.048s
@@ -209,7 +211,7 @@ Quieres aprender mas sobre la arquitectura del GC y como funciona por dentro. En
 ## Conclusión
 Para una aplicación de tipo microservicio, se busca que el GC pueda ofrecer un mejor balance entre throughput y latencia para garantizar disponibilidad y consuma la menor cantidad de memoria posible para ser mas costo-eficiente durante el escalamiento horizontal.
 
-Por lo tanto, G1GC y ParallelGC son las opciones mas viables para un microservicio. La elección entre uno u otro dependerá de las metas de la aplicación y la importancia que le den a cada una de las 4 métricas. Sin embargo yo eligiría G1GC por estar soportado por más herramientas (por ejemplo GraalVM) y ser el GC que ofrece un mejor balance entre todas las métricas.
+Por lo tanto, G1GC y ParallelGC son las opciones mas viables para un microservicio. La elección entre uno u otro dependerá de las metas de la aplicación y la importancia que le den a cada una de las 4 métricas. Sin embargo yo eligiría `G1GC` por estar soportado por más herramientas (por ejemplo GraalVM) y ser el GC que ofrece un mejor balance entre todas las métricas.
 
 Se espera que los microservicios tengan una resolución rapida y ante una alta carga de solicitudes, la misma arquitectura te permita una distribución de carga y escalamiento horizontal. Entonces la carga final se distribuye en multiples instancias de JVM y no se requiere un alto tamaño de Heap.
 
@@ -226,7 +228,7 @@ Hay muchas herramientas que te permiten analizar el log del GC de forma sencilla
 Espero que este articulo le haya servido para conocer más sobre las implementaciones de los GCs y aprender un poco mas sobre ellas, ya que se viene en roadmap el Thread-Local GC compatible con el proyecto Loom 
 y Virtual Threads :)
 
-En este link estara el paso a paso y el [codigo fuente](../README.md) para que puedas ejecutar este benchmark por ti mismo y saques tus propias conclusiones.
+En este link estara el paso a paso y el [codigo fuente](https://github.com/czelabueno/java21-gc-microbench/blob/main/README.md) para que puedas ejecutar este benchmark por ti mismo y saques tus propias conclusiones.
 
 
 Si te gusto comparte este articulo en tus redes para aprender mas de la plataforma Java en español.
