@@ -35,8 +35,11 @@ OpenJDK 64-Bit Server VM GraalVM CE 21+35.1 (build 21+35-jvmci-23.1-b15, mixed m
 ```
 .. y ha sido ejecutado en una MacBook Pro M2 Chip `MacBook-Pro 22.5.0 Darwin Kernel Version 22.5.0...RELEASE_ARM64_T8112 arm64` de CPU `8-Core`, Memoria fisica de `8GB`
 
-![java21-gc-bench](blob:https://github.com/4683b652-9617-4eb2-8bee-95ed639ad2fc)
-
+<img
+    class="user-photo"
+    src="../images/j21-gc-microbenchmarks.jpg"
+    alt="j21-gc-microbenchmarks.jpg"
+/>
 
 - _Latencia medida en microsegundos (μs) 1/1,000,000 de segundo_
 
@@ -70,7 +73,7 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
     Esta configuración generaría 1MM de solicitudes en 20 segundos de forma distribuida con 4 workers por corrida.
 
 
-    ### Resultado final:
+    Resultado final:
     ```
     # GC Log
     [71.552s][info][gc] GC(571) Pause Young (Allocation Failure) 33M->10M(109M) 0.177ms
@@ -107,7 +110,7 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
     Esta configuracion generaria 1MM de solicitudes en 20 segundos de forma distribuida con 4 workers por corrida.
 
 
-    ### Resultado final:
+    Resultado final:
 
     ```
     # GC Log
@@ -145,7 +148,7 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
     Esta configuración generaría 1MM de solicitudes en 20 segundos de forma distribuida con 4 workers por corrida.
 
 
-    ### Resultado final:
+    Resultado final:
 
     ```
     # GC Log
@@ -187,7 +190,7 @@ Existen GC de distintos tipos, estan los concurrentes, los basados en threads, l
     Esta configuración generaría 1MM de solicitudes en 20 segundos de forma distribuida con 4 workers por corrida.
 
 
-    ### Resultado final:
+    Resultado final:
 
     ```
     # GC Log
