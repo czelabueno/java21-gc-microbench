@@ -35,7 +35,7 @@ OpenJDK 64-Bit Server VM GraalVM CE 21+35.1 (build 21+35-jvmci-23.1-b15, mixed m
 ```
 .. y ha sido ejecutado en una MacBook Pro M2 Chip `MacBook-Pro 22.5.0 Darwin Kernel Version 22.5.0...RELEASE_ARM64_T8112 arm64` de CPU `8-Core`, Memoria fisica de `8GB`
 
-![java21-gc-bench](https://raw.githubusercontent.com/czelabueno/java21-gc-microbench/images/j21-gc-microbenchmarks.jpg)
+![java21-gc-bench](https://raw.githubusercontent.com/czelabueno/java21-gc-microbench/main/images/j21-gc-microbenchmarks.jpg)
 
 
 - _Latencia medida en microsegundos (μs) 1/1,000,000 de segundo_
