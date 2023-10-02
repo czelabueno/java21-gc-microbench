@@ -1,0 +1,1 @@
+./mvnw package -Dquarkus.package.type=uber-jar

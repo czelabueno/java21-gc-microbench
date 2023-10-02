@@ -1,4 +1,4 @@
-# Micro-benchmark de rendimiento de los GCs en el JDK 21 [en español]
+# Micro-benchmark de rendimiento de los GCs en el JDK 21 📊 [en español]
 
 Hola!
 
@@ -7,7 +7,7 @@ Con el lanzamiento de `java` 21 tuve la curiosidad de evaluar el rendimiento de 
 Antes que decidas utilizar uno u otro GC vamos a hacer una breve introducción de que es el GC en términos simples y porque es importante saber cuál su papel en el rendimiento de tu aplicación.
 
 ## Introducción al GC
-El GC es el mecanismo que tiene la JVM para poder destruir codigo y objetos creados por tu aplicación de forma automática. Derrepente si has programado en lenguajes de antaño como C o C++ parte de tu rutina de programación era destruir el objeto cuando ya cumplía su función. En `java` ese trabajo lo hace el GC por ti, con el fin de liberar el espacio de memoria asignada al `Heap` para que haya disponibilidad de memoria y asi alojar más objetos que tu aplicación va a ir creando en tiempo de ejecución sin que se quede sin memoria, sí el famoso `OutOfMemory Exception`. El gran trabajo que hace el GC (y que muchas veces no es reconocido) es que tu aplicación continúe `uptime` y no se quede sin recursos, aunque a veces pasa una paradoja donde el GC es el que se consume los recursos de computo y tu aplicación no puede ejecutarse correctamente y hace `crash` pero esto en el 99.99% de los casos es por un mal `tunning` del GC o la elección inadecuada del GC para tu tipo de aplicación.
+El GC es el mecanismo que tiene la JVM para poder destruir codigo y objetos en desuso de forma automática. Derrepente si has programado en lenguajes de antaño como C o C++ parte de tu rutina de programación era destruir el objeto cuando ya cumplía su función. En `java` ese trabajo lo hace el GC por ti, con el fin de liberar el espacio de memoria asignada al `Heap` para que haya disponibilidad de memoria y asi alojar más objetos que tu aplicación va a ir creando en tiempo de ejecución sin que se quede sin memoria, sí el famoso `OutOfMemory Exception`. El gran trabajo que hace el GC (y que muchas veces no es reconocido) es que tu aplicación continúe `uptime` y no se quede sin recursos, aunque a veces pasa una paradoja donde el GC es el que se consume los recursos de computo y tu aplicación no puede ejecutarse correctamente y hace `crash` pero esto en el 99.99% de los casos es por un mal `tunning` del GC o la elección inadecuada del GC para tu tipo de aplicación.
 
 Ahora ya te has dado cuenta la importancia que tiene conocerlo, no?
 
@@ -37,7 +37,7 @@ OpenJDK 64-Bit Server VM GraalVM CE 21+35.1 (build 21+35-jvmci-23.1-b15, mixed m
 ```
 .. y ha sido ejecutado en una MacBook Pro M2 Chip `MacBook-Pro 22.5.0 Darwin Kernel Version 22.5.0...RELEASE_ARM64` de CPU `8-Core`, Memoria fisica de `8GB`
 
-Este micro-benchmark ha puesto a prueba 4 implementaciones de GCs usando sus configuraciones por defecto (sin tunning) y ejecuto 1MM de solicitudes sostenidas en 3 repeticiones para seleccionar cuál es más eficiente para un microservicio, recordemos la [definicion de microservicio](https://www.vmware.com/es/topics/glossary/content/microservices.html) y veremos que una de sus principales caracteristicas es ofrecer una mayor disponibilidad y escalamiento por lo que esos serán los criterios más importantes a tomar en cuenta.
+Este micro-benchmark ha puesto a prueba 4 implementaciones de GCs usando sus configuraciones por defecto (sin tunning) y ejecutó 1MM de solicitudes sostenidas en 3 repeticiones para seleccionar cuál es más eficiente para un microservicio, recordemos la [definicion de microservicio](https://www.vmware.com/es/topics/glossary/content/microservices.html) y veremos que una de sus principales caracteristicas es ofrecer una mayor disponibilidad y escalamiento por lo que esos serán los criterios más importantes a tomar en cuenta.
 
 Bien, entonces aqui el resultado:
 
@@ -51,7 +51,9 @@ Bien, entonces aqui el resultado:
 
 
 
-Existen GC de distintos tipos, estan los concurrentes, los basados en threads, los que buscan un mejor equilibrio entre throughput y latencia, etc. Bajo esa misma perspectiva evaluamos estos 4 (el generational ZGC fue incluida porque es la última implementación liberada en Java 21 y despertó mi curiosidad).
+Como has podido ver en el gráfico se han evaluado 4 implementaciones de GC, el `Parallel`, `G1`, `ZGC` y el ultimo ingresado en la JDK 21, el `Generational ZGC`.
+
+Existen GC de distintos tipos, estan los concurrentes, los basados en threads, los que buscan un mejor equilibrio entre throughput y latencia, etc.
 
 A continuación explicare y analizaremos juntos los detalles de la ejecución de prueba desde el punto de vista de cada GC:
 
@@ -235,12 +237,16 @@ Hay muchas herramientas que te permiten analizar el log del GC de forma sencilla
 Espero que este articulo te haya servido para conocer más sobre las implementaciones de los GCs y aprender un poco mas sobre ellas y su importancia, ya que se viene en roadmap el Thread-Local GC compatible con el proyecto Loom 
 y Virtual Threads :)
 
-En este link estara el paso a paso y el [codigo fuente](https://github.com/czelabueno/java21-gc-microbench/blob/main/README.md) para que puedas ejecutar este benchmark por ti mismo y con tu propia aplicación y saques tus propias conclusiones.
+En este link esta el paso a paso y el [codigo fuente](https://github.com/czelabueno/java21-gc-microbench/blob/main/README.md) para que puedas ejecutar este benchmark por ti mismo usando tu propia aplicación (si asi lo deseas o también puedes usar el mismo sample, como gustes) y saques tus propias conclusiones. 
+
+Mas escenarios ejecutados y todos los datos utilizados para los gráficos se pueden encontrar en [esta hoja de cálculo.](https://docs.google.com/spreadsheets/d/1_pVhNZsogZm49egi6ass_kj_twM8qMXa/edit?usp=drive_link&ouid=111267661985412455736&rtpof=true&sd=true)
 
 
-Si te gusto comparte este articulo en tus redes para aprender mas de la plataforma Java en español.
+Si te gustó éste articulo compártelo en tus redes y ayuda a otros ha aprender más de como podemos probar y mejorar el rendimiento de nuestras aplicaciones java y consumir menos recursos de computo y contribuir con el [`green IT`](https://greenly.earth/en-us/blog/ecology-news/everything-you-need-to-know-about-green-it-in-2022#anchor-26) 🌱 
 
-Happy coding!
+Sígueme para mas contenido de la plataforma Java en español.
+
+Happy coding! 👨‍💻👩‍💻
 
 [Carlos Zela](https://sessionize.com/czelabueno)
 
