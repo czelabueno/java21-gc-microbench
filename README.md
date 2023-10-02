@@ -1,8 +1,8 @@
-# How-to: Micro-benchmark de rendimiento de los GCs en el JDK 21
+# How-to: Micro-benchmark de rendimiento de los GCs en el JDK 21 para un microservicio [en español]
 
-Bien! Si has llegado hasta aqui es porque te interesó y has leido todo el articulo del `micro-benchmark`. En caso has llegado aqui directamente, te recomiendo que antes de continuar [leas el articulo](https://czelabueno.github.io/java21-gc-microbench/) primero. Te tomara 10 minutos.
+Bien! Si has llegado hasta aqui es porque te interesó y has leído el articulo del `micro-benchmark`. En caso has llegado aqui directamente, te recomiendo que antes de continuar [leas el articulo](https://czelabueno.github.io/java21-gc-microbench/) primero. Te tomará 10 minutos.
 
-Ahora si, seguimos.
+Ahora sí, seguimos.
 
 ## Pre-requisitos
 - Instala `JDK 21` usando [SDKMAN](https://sdkman.io/)
@@ -12,7 +12,7 @@ Ahora si, seguimos.
     # No olvides escribir 'Y' para terminar la instalacion.
     $ sdk default java 21-graalce
     ```
-- Instala `hey`, nuestra herramienta para lanzar las pruebas de carga http. El script asume que usas un SO linux. En caso uses otro, solo reemplaza la linea del `wget` por el [link de descarga](https://github.com/rakyll/hey#installation) correcto.
+- Instala `hey`, esta será la herramienta para lanzar las pruebas de carga http. El script asume que usas un SO linux. En caso uses otro, solo reemplaza la linea del `wget` por el [link de descarga](https://github.com/rakyll/hey#installation) correcto.
 
     ```
     echo "Installing hey HTTP load testing tool..."
@@ -35,7 +35,7 @@ Ahora si, seguimos.
     OpenJDK Runtime Environment GraalVM CE 21+35.1 (build 21+35-jvmci-23.1-b15)
     OpenJDK 64-Bit Server VM GraalVM CE 21+35.1 (build 21+35-jvmci-23.1-b15, mixed mode, sharing)
     ```
-    Probado `hey`...
+    Probando `hey`...
     ```
     $ hey
     ```
@@ -57,7 +57,9 @@ Ahora si, seguimos.
     ....
     ```
 
-## Clona el codigo y genera el `.jar`
+Listo ahora si pasamos al código.
+
+## Clona el repo y genera el `.jar`
 ```
 $ git clone https://github.com/czelabueno/java21-gc-microbench.git
 $ cd quarkus-aot-sample
@@ -65,19 +67,18 @@ $ ./build.sh
 ```
 ... el `jar` lo debes encontrar con el nombre de `target/quarkus-aot-sample-1.0.0-SNAPSHOT-runner.jar`
 
-Si hemos llegado hasta aqui sin fallas es que ya tenemos nuestra aplicacion generada para correr las pruebas con diferentes GC.
+Si hemos llegado hasta aqui sin fallas es que ya tenemos nuestra aplicacion generada para correr las pruebas con diferentes Garbage Collectors (GC).
 
 
 ## Ejecucion de pruebas
 
-**Sugerencia:** Para que puedas ver los logs de forma mas legible intenta correr tu aplicacion java abriendo otro terminal. De esta manera no tendras los logs de tu aplicacion junto con los logs de la pruebas de carga y estres.
-
-Usa un terminal para levantar la aplicacion y otro para correr las pruebas de carga y/o estres.
+**Sugerencia** 
+Usa un terminal para levantar la aplicación y otro para correr los scrtips de pruebas de carga y/o estres.
 
 ### Parallel GC
 
 Corremos la aplicacion utilizando el GC `ParallelGC` activando el debug.
-Con el debug podremos ver mas detalles de las pausas y los tiempos de ejecucion que va midiendo el mismo GC.
+Con el debug podremos ver más detalles de las pausas y los tiempos de ejecución que va midiendo el mismo GC.
 
 Corremos la aplicacion...
 ```
@@ -88,7 +89,7 @@ Corremos el script de carga...
 ```
 $ ./load-test-gc.sh Parallel
 ```
-Esta carga generara aprox 1MM de solicitudes en 20 segundos utilizando 4 workers de `hey`
+Esta carga generará aprox 1MM de solicitudes en 20 segundos utilizando 4 workers de `hey`
 
 El resultado de la ejecucion debe lucir algo como esto:
 ```
@@ -100,9 +101,9 @@ Latency of 99% of Requests: 100 μs(microseconds)
 Total responses: 1000000 [200 OK]
 
 ```
-Listo! Ya podras ver los resultados del throughtput req/s, max memoria utilizada y latencia del 99% (las 3 metricas de rendimiento que queremos comparar) 🙌
+Listo! Ya podras ver los resultados del throughtput req/s, max memoria utilizada y latencia del 99% (las 3 metricas de rendimiento que queremos comparar).
 
-Puedes sostener la carga ejecutando este mismo script una, dos y hasta tres veces si asi lo prefieres.
+Puedes sostener la carga ejecutando este mismo script una, dos y hasta tres veces si así lo prefieres. Solamente recuerda que debes ejecutar la misma carga para todos los GC para hacer una comparación justa.
 
 Una vez terminadas las pruebas seran guardadas automaticamente en estos 2 archivos:
 - `JDK_21_Parallel.txt` el ultimo `output` de la ejecucion de `hey`.
@@ -118,7 +119,7 @@ $ kill -9 <PID>
 
 ### G1 GC
 
-Ahora repetiremos los mismos pasos pero ejecutaremos la aplicacion usando el `G1GC`. Recordemos que este es el GC por defecto por lo que no es necesario especificar el GC.
+Ahora repetiremos los mismos pasos pero ejecutaremos la aplicacion usando el `G1GC`. Recordemos que este es el GC por defecto por lo que no es necesario especificar el GC cuando lo corramos.
 
 
 Corremos la aplicacion...
@@ -132,23 +133,19 @@ $ ./load-test-gc.sh G1
 ```
 Esta carga generara aprox 1MM de solicitudes en 20 segundos utilizando 4 workers de `hey`
 
-Listo! Ya podras ver los resultados de las 3 metricas de rendimiento que queremos comparar 🙌
-
-Si en el GC anterior repitiste la pruebas de estres en varias series, hazlo igual con esta y las demas para comparar las misma carga para todos. 
-
-Una vez terminadas las pruebas, los resultados tambien seran guardados automaticamente en estos 2 archivos:
+Una vez terminadas las pruebas, los resultados también serán guardados automaticamente en estos 2 archivos:
 - `JDK_21_G1.txt` el ultimo `output` de la ejecucion de `hey`.
 - `JDK_21_G1_metrics.txt` resumen y resultado final de las metricas.
 
-Detenemos la aplicacion...
+Detenemos la aplicación...
 
-Si lo estas corriendo en background ejecuta el comando de abajo sino solo haz `ctl + c` para detener la aplicacion.
+Si lo estas corriendo en background ejecuta el comando de abajo sino solo haz `ctl + c` para detener la aplicación.
 ```
 $ ps aux | grep quarkus-aot-sample-1.0.0-SNAPSHOT-runner
 $ kill -9 <PID>
 ```
 ### ZGC
-Corremos la aplicacion...
+Corremos la aplicación...
 ```
 java -verbose:gc -XX:+UseZGC -jar target/quarkus-aot-sample-1.0.0-SNAPSHOT-runner.jar &
 
@@ -193,12 +190,16 @@ $ ps aux | grep quarkus-aot-sample-1.0.0-SNAPSHOT-runner
 $ kill -9 <PID>
 ```
 
-Listo! Hasta aqui ya hemos terminado de colectar las 3 metricas (max rss, throughput, latencia 99%) de rendimiento para las 4 implementaciones de GC. 🙌
+Listo! Hasta aquí ya hemos terminado de recolectar las 3 metricas (`max rss`, `throughput`, `latencia 99%`) de rendimiento para las 4 implementaciones de GC. 🙌
 
-## Analisis de resultados 📊
-En este [articulo](https://czelabueno.github.io/java21-gc-microbench/) hice un analisis detallado y comparativo de este micro-bench.
+## Análisis de resultados 📊
+En este [artículo](https://czelabueno.github.io/java21-gc-microbench/) hice un análisis detallado y comparativo de este micro-bench.
 
-Contribuyamos con la reduccion de CO2 y el consumo de energia electrica ♻️.
+Como resumen podemos concluir que el `G1GC` puede ofrecer un mejor balance entre throughput y latencia para garantizar disponibilidad y consuma la menor cantidad de memoria posible para ser mas costo-eficiente durante el escalamiento horizontal de un microservicio.
+
+Sin embargo, te recomiendo que utilices las metricas recolectadas para que evalues cada una de acuerdo a los objetivos de tu aplicacion. 
+
+Contribuyamos con la reducción de CO2 y el consumo de energia eléctrica ♻️ consumiendo la menor cantidad posible memoria, cpu, storage, etc.
 
 
 Happy coding!
